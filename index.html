@@ -1,0 +1,85 @@
+<!doctype html>
+<html class="no-js" lang="zh">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="x-ua-compatible" content="ie=edge">
+	<title>jQuery bootstrap日期插件</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="css/date.css"/>
+	<link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/2.2.1/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="css/bootstrap-datetimepicker.min.css"/>
+	<style>
+		.form_datetime {width: 10.6rem;border: 0;outline: none;}
+	</style>
+</head>
+
+<body>
+
+<label for="startDate">入住时间</label>
+<input type="text" id="startDate" placeholder="请点击选择入住时间" readonly class="form_datetime"/>
+<label for="endDate">离店时间</label>
+<input type="text" id="endDate" placeholder="请点击选择离开时间" readonly class="form_datetime"/>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap-datetimepicker.min.js"></script>
+<script>
+	//开始日期
+	var sdate = new Date();
+	// 	自定义格式
+	$.fn.datetimepicker.dates['zdy'] = {
+		days: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+		daysShort: ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+		daysMin: ["日", "一", "二", "三", "四", "五", "六"],
+		months: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+		monthsShort: ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"],
+		today: "今天",
+		format: "yyyy-mm-dd",
+		titleFormat: "yyyy-mm-",
+		weekStart: 1,
+		suffix: [],
+		meridiem: ["上午", "下午"]
+	};
+	//入住时间初始化
+	$('#startDate').datetimepicker({
+		language: 'zdy',
+		weekStart: 1,
+		todayBtn: 1,
+		autoclose: 1,
+		startDate: sdate,
+		minView: 2,
+		maxView: 3,
+		onRenderDay: function (date) {
+			//日期格式2019-06-15
+			var date1 = date.getFullYear() + '-' + (date.getMonth() < 9 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-' + (date.getDate() < 10 ? '0' + (date.getDate() - 1) : date.getDate() - 1);
+		}
+	}).on('changeDate', function (ev) {
+		//当入住日期改变的时候
+		$('#endDate').datetimepicker('remove');
+		$('#endDate').val('');
+		var sdate = $("#startDate").val();
+		var edate;
+		//离店时间初始化
+		$('#endDate').datetimepicker({
+			language: 'zdy',
+			weekStart: 1,
+			todayBtn: 1,
+			autoclose: 1,
+			startDate: sdate,
+			endDate: edate,
+			minView: 2,
+			maxView: 3
+		}).on('changeDate', function (ev) {
+			console.log(ev);
+		});
+	});
+
+	$("#endDate").click(function () {
+		if ($("#startDate").val() == '') {
+			console.log('请先选择入住时间！');
+		}
+	});
+</script>
+</body>
+</html>
